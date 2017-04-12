@@ -60,7 +60,11 @@
 <script>
     export default {
         name: 'list-item',
-        props: ['item'],
+        props: {
+            item: {
+                type: Object
+            }
+        },
         data() {
             return {
                 mode: 'view',
