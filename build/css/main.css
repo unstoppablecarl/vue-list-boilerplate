@@ -1,0 +1,18 @@
+.list-header {
+  padding: 5px;
+  font-weight: bold;
+  border-bottom: 2px solid #808080;
+}
+
+.list-item {
+  padding: 5px;
+  border: 1px solid #808080;
+  border-width: 0 1px 1px;
+}
+
+.list-item-new {
+  padding: 5px;
+  border: 1px solid #808080;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJidWlsZC9jc3MvbWFpbi5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/
