@@ -11,7 +11,7 @@
                 <div class="col-sm-4">
                     Desc
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-1">
                     Actions
                 </div>
             </div>
@@ -47,7 +47,10 @@
                         placeholder="Desc"
                 >
             </div>
-            <div class="col-sm-3">
+
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-1">
 
                 <button class="btn btn-success" @click="addItem">Add</button>
             </div>
@@ -62,7 +65,11 @@
         name: 'list',
         data: function () {
             return {
-                newItem: {}
+                newItem: {
+                    name: null,
+                    desc: null,
+                    file: null,
+                },
             };
         },
         methods: {

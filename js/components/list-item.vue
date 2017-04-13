@@ -34,13 +34,15 @@
 
                 <div class="form-control-static">
                     {{model.desc}}
-
                 </div>
 
             </template>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
+            {{model.updated}}
+        </div>
+        <div class="col-sm-1">
             <template v-if="mode === 'edit'">
                 <label>Editing</label><br>
 

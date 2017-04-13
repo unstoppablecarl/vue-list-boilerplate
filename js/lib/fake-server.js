@@ -3,6 +3,7 @@ const emptyItem = {
     id: null,
     name: null,
     desc: null,
+    updated: null,
 };
 
 export default {
@@ -17,42 +18,32 @@ export default {
     },
     create(item){
         item.id             = idIncrement++;
-        item                = makeItem(item);
+        let created         = makeItem(item);
         this.items[item.id] = item;
 
-        return new Promise((resolve, reject) => {
-            console.log('server', 'create', item);
-            resolve(item);
-
-        });
+        console.log('server', 'create', created);
+        return Promise.resolve(created);
     },
     update(item){
-        let current         = this.items[item.id];
-        let updated         = _.extend(current, item);
+        let updated         = makeItem(item);
         this.items[item.id] = updated;
 
-        return new Promise((resolve, reject) => {
+        console.log('server', 'update', updated);
+        return Promise.resolve(updated);
 
-            console.log('server', 'update', item);
-            resolve(updated);
-
-        });
     },
     delete(item){
+        let current = this.items[item.id];
+        let deleted = makeItem(current);
 
-        let deleted = makeItem(item.id);
         delete this.items[item.id];
 
-        return new Promise((resolve, reject) => {
-
             console.log('server', 'delete', deleted);
-            resolve(deleted);
-
-        });
+        return Promise.resolve(deleted);
     }
 };
 
 function makeItem(item) {
-    return Object.assign({}, emptyItem, item);
+    return Object.assign({}, emptyItem, item, {updated: (+new Date())});
 }
 

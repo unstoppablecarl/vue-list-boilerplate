@@ -1,6 +1,6 @@
-import server from './fake-server';
+export default function ({server}) {
 
-export default new Vuex.Store({
+    return new Vuex.Store({
     state: {
         items: [],
     },
@@ -17,25 +17,25 @@ export default new Vuex.Store({
     },
     actions: {
         create({commit}, item){
-            server.create(item)
-                .then(function (item) {
-                    commit('create', item)
+                return server.create(item)
+                    .then(function (serverItem) {
+                        commit('create', serverItem);
                 });
         },
         update({commit}, item){
-            server.update(item)
-                .then(function (item) {
-                    commit('update', item)
+                return server.update(item)
+                    .then(function (serverItem) {
+                        commit('update', serverItem);
                 });
         },
         delete({commit}, item){
-            server.delete(item)
-                .then(function (item) {
-                    commit('delete', item)
+                return server.delete(item)
+                    .then(function (serverItem) {
+                        commit('delete', serverItem);
                 });
         },
         fetch({commit}){
-            server.fetch()
+                return server.fetch()
                 .then(function (items) {
                     items.forEach(function (item) {
                         commit('create', item);
@@ -49,6 +49,8 @@ export default new Vuex.Store({
         }
     }
 });
+
+}
 
 function findItemIndex(items, item) {
     for (let i = 0; i < items.length; i++) {
