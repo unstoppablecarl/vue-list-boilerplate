@@ -1,9 +1,11 @@
 <template>
     <div class="row list-item">
         <div class="col-sm-1">
+
             <template v-if="mode === 'edit'">
                 <label>ID</label>
             </template>
+
             <div class="form-control-static">
                 {{model.id}}
             </div>
@@ -38,6 +40,7 @@
 
             </template>
         </div>
+
         <div class="col-sm-1">
             {{model.revision}}
         </div>

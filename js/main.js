@@ -16,17 +16,14 @@ let data = [
     {
         name: 'foo',
         desc: 'this is a foo',
-        updated: 0,
     },
     {
         name: 'bar',
         desc: 'this is a bar',
-        updated: 0,
     },
     {
         name: 'abc',
         desc: 'this is a abc',
-        updated: 0,
     }
 ];
 

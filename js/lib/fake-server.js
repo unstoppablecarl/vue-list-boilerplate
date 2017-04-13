@@ -17,7 +17,7 @@ export default {
     create(item){
         item.id             = idIncrement++;
         let created         = makeItem(item);
-        this.items[item.id] = item;
+        this.items[item.id] = created;
 
         console.log('server', 'create', created);
         return Promise.resolve(created);
