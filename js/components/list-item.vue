@@ -7,7 +7,7 @@
             </template>
 
             <div class="form-control-static">
-                {{model.id}}
+                {{item.id}}
             </div>
         </div>
 
@@ -20,7 +20,7 @@
             </template>
             <template v-if="mode === 'view'">
                 <div class="form-control-static">
-                    {{model.name}}
+                    {{item.name}}
                 </div>
             </template>
         </div>
@@ -35,14 +35,14 @@
             <template v-if="mode === 'view'">
 
                 <div class="form-control-static">
-                    {{model.desc}}
+                    {{item.desc}}
                 </div>
 
             </template>
         </div>
 
         <div class="col-sm-1">
-            {{model.revision}}
+            {{item.revision}}
         </div>
 
         <div class="col-sm-2">
@@ -73,19 +73,18 @@
         data() {
             return {
                 mode: 'view',
-                model: _.extend({}, this.item),
             }
         },
         methods: {
-            revert(){
+            resetModel(){
                 this.model = _.extend({}, this.item);
             },
-
             edit(){
+                this.resetModel();
                 this.mode = 'edit';
             },
             cancelEdit(){
-                this.revert();
+                this.resetModel();
                 this.mode = 'view';
             },
 
