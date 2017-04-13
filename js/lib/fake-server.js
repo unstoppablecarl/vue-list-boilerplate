@@ -1,9 +1,9 @@
-let idIncrement = 3;
+let idIncrement = 1;
 const emptyItem = {
     id: null,
     name: null,
     desc: null,
-    updated: null,
+    revision: null,
 };
 
 export default {
@@ -11,10 +11,8 @@ export default {
     fetch(){
         let data = _.values(this.items);
 
-        return new Promise((resolve, reject) => {
-            console.log('server', 'fetch', data);
-            resolve(data);
-        });
+        console.log('server', 'fetch', data);
+        return Promise.resolve(data);
     },
     create(item){
         item.id             = idIncrement++;
@@ -38,12 +36,16 @@ export default {
 
         delete this.items[item.id];
 
-            console.log('server', 'delete', deleted);
+        console.log('server', 'delete', deleted);
         return Promise.resolve(deleted);
     }
 };
 
 function makeItem(item) {
-    return Object.assign({}, emptyItem, item, {updated: (+new Date())});
+    let result = _.extend({revision: 0,}, emptyItem, item);
+
+    result.revision++;
+
+    return result;
 }
 

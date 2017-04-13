@@ -12,6 +12,10 @@
                     Desc
                 </div>
                 <div class="col-sm-1">
+                    Revision
+                </div>
+
+                <div class="col-sm-2">
                     Actions
                 </div>
             </div>
@@ -20,6 +24,7 @@
                     v-for="item in items"
                     :key="item.id"
                     :item="item"
+                    :item_name="item.name"
             ></list-item>
 
         </div>
@@ -48,10 +53,9 @@
                 >
             </div>
 
-            <div class="col-sm-2">
-            </div>
             <div class="col-sm-1">
-
+            </div>
+            <div class="col-sm-2">
                 <button class="btn btn-success" @click="addItem">Add</button>
             </div>
         </div>

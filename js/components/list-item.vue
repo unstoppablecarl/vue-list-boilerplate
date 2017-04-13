@@ -18,7 +18,7 @@
             </template>
             <template v-if="mode === 'view'">
                 <div class="form-control-static">
-                   {{model.name}}
+                    {{model.name}}
                 </div>
             </template>
         </div>
@@ -38,11 +38,11 @@
 
             </template>
         </div>
+        <div class="col-sm-1">
+            {{model.revision}}
+        </div>
 
         <div class="col-sm-2">
-            {{model.updated}}
-        </div>
-        <div class="col-sm-1">
             <template v-if="mode === 'edit'">
                 <label>Editing</label><br>
 
@@ -65,30 +65,24 @@
         props: {
             item: {
                 type: Object
-            }
+            },
         },
         data() {
             return {
                 mode: 'view',
-                model: this.item,
-                prev: {}
+                model: _.extend({}, this.item),
             }
         },
         methods: {
-            _setPrev(){
-                this.prev = _.extend({}, this.model);
-            },
-            _revertPrev(){
-                this.model = _.extend({}, this.prev);
-                this.prev  = {}
+            revert(){
+                this.model = _.extend({}, this.item);
             },
 
             edit(){
-                this._setPrev();
                 this.mode = 'edit';
             },
             cancelEdit(){
-                this._revertPrev();
+                this.revert();
                 this.mode = 'view';
             },
 
@@ -96,10 +90,16 @@
                 this.mode = 'view';
                 this.$store.dispatch('update', this.model);
             },
+
             remove(){
                 this.$store.dispatch('delete', this.model);
+            },
+        },
+        watch: {
+            item(item){
+                this.model = _.extend({}, item);
             }
-        }
+        },
     }
 </script>
 

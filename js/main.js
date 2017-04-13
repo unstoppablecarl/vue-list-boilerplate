@@ -1,8 +1,6 @@
 import './_init';
 import Store from './lib/store';
 import server from './lib/fake-server';
-//import server from './lib/server';
-
 
 let store = Store({
     server
@@ -16,16 +14,19 @@ let app = new Vue({
 // seed some server data
 let data = [
     {
-        id: 1,
         name: 'foo',
         desc: 'this is a foo',
-
+        updated: 0,
     },
     {
-        id: 2,
         name: 'bar',
         desc: 'this is a bar',
-
+        updated: 0,
+    },
+    {
+        name: 'abc',
+        desc: 'this is a abc',
+        updated: 0,
     }
 ];
 
