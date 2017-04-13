@@ -75,7 +75,6 @@ function updateItem(items, item) {
     items.splice(index, 1, item);
 }
 
-
 function deleteItem(items, item) {
     let index = findItemIndex(items, item);
     if (index === false) {

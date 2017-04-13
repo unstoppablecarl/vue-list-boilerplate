@@ -24,7 +24,6 @@
                     v-for="item in items"
                     :key="item.id"
                     :item="item"
-                    :item_name="item.name"
             ></list-item>
 
         </div>
@@ -39,7 +38,7 @@
                 <input
                         class="form-control"
                         v-model="newItem.name"
-                        @keyup.enter="addItem"
+                        @keyup.enter="addItem()"
                         placeholder="Name"
                 >
             </div>
@@ -48,7 +47,7 @@
                 <input
                         class="form-control"
                         v-model="newItem.desc"
-                        @keyup.enter="addItem"
+                        @keyup.enter="addItem()"
                         placeholder="Desc"
                 >
             </div>
@@ -56,7 +55,7 @@
             <div class="col-sm-1">
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-success" @click="addItem">Add</button>
+                <button class="btn btn-success" @click="addItem()">Add</button>
             </div>
         </div>
     </div>
