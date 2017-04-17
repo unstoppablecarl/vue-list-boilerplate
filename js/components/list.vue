@@ -53,6 +53,7 @@
             </div>
 
             <div class="col-sm-1">
+                
             </div>
             <div class="col-sm-2">
                 <button class="btn btn-success" @click="addItem()">Add</button>
@@ -68,11 +69,7 @@
         name: 'list',
         data: function () {
             return {
-                newItem: {
-                    name: null,
-                    desc: null,
-                    file: null,
-                },
+                newItem: {},
             };
         },
         methods: {
