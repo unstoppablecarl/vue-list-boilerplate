@@ -75,6 +75,7 @@
         data() {
             return {
                 mode: 'view',
+                model: _.extend({}, this.item),
             }
         },
         methods: {
