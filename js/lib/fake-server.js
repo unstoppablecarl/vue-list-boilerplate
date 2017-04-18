@@ -27,7 +27,8 @@ export default {
     },
     update(item){
         item = json(item);
-
+        let current = this.items[item.id];
+        item.revision = current.revision;
         let updated         = makeItem(item);
         this.items[item.id] = updated;
 
@@ -49,7 +50,7 @@ export default {
 };
 
 function makeItem(item) {
-    let result = _.extend({revision: 0,}, emptyItem, item);
+    let result = _.extend({revision: 0}, emptyItem, item);
 
     result.revision++;
 
