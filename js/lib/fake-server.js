@@ -1,4 +1,5 @@
 let idIncrement = 1;
+
 const emptyItem = {
     id: null,
     name: null,
@@ -15,6 +16,8 @@ export default {
         return Promise.resolve(data);
     },
     create(item){
+        item = json(item);
+
         item.id             = idIncrement++;
         let created         = makeItem(item);
         this.items[item.id] = created;
@@ -23,6 +26,8 @@ export default {
         return Promise.resolve(created);
     },
     update(item){
+        item = json(item);
+
         let updated         = makeItem(item);
         this.items[item.id] = updated;
 
@@ -31,6 +36,8 @@ export default {
 
     },
     delete(item){
+        item = json(item);
+
         let current = this.items[item.id];
         let deleted = makeItem(current);
 
@@ -49,3 +56,7 @@ function makeItem(item) {
     return result;
 }
 
+
+function json(data) {
+    return JSON.parse(JSON.stringify(data));
+}
