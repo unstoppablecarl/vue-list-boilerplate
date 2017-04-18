@@ -42,7 +42,9 @@
         </div>
 
         <div class="col-sm-1">
-            {{item.revision}}
+            <div class="form-control-static">
+                {{item.revision}}
+            </div>
         </div>
 
         <div class="col-sm-2">
