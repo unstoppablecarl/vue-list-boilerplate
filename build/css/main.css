@@ -7,12 +7,23 @@
 .list-item {
   padding: 5px;
   border: 1px solid #808080;
-  border-width: 0 1px 1px;
+  margin-top: -1px;
+  background: #fff;
 }
 
 .list-item-new {
   padding: 5px;
   border: 1px solid #808080;
+}
+
+.sortable-chosen {
+  opacity: 1 !important;
+  border: 1px solid #000;
+}
+
+.sortable-ghost {
+  border: 1px solid red;
+  background: #f9f9f9;
 }
 
 /*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJidWlsZC9jc3MvbWFpbi5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/

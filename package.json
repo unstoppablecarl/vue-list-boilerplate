@@ -16,5 +16,6 @@
     "vuex": "^2.2.1"
   },
   "dependencies": {
+    "vuedraggable": "^2.10.0"
   }
 }

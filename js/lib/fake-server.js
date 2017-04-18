@@ -9,12 +9,21 @@ const emptyItem = {
 export default {
     items: {},
     fetch(){
-        let data = _.values(this.items);
+
+        let data = _.sortBy(this.items, 'display_order');
+
+        data = data.map((item) => {
+            let cItem = _.extend({}, item);
+            delete cItem.display_order;
+            return cItem;
+        });
 
         console.log('server', 'fetch', data);
         return Promise.resolve(data);
     },
     create(item){
+        item = json(item);
+
         item.id             = idIncrement++;
         let created         = makeItem(item);
         this.items[item.id] = created;
@@ -23,14 +32,31 @@ export default {
         return Promise.resolve(created);
     },
     update(item){
+        item = json(item);
+
         let updated         = makeItem(item);
         this.items[item.id] = updated;
 
         console.log('server', 'update', updated);
         return Promise.resolve(updated);
+    },
+    sync(allItems){
+        allItems = json(allItems);
+
+        this.items = {};
+        let items  = this.items;
+        allItems.forEach(function (item, index) {
+            item.display_order = index;
+            items[item.id]     = item;
+        });
+
+        console.log('server', 'sync');
+        return this.fetch();
 
     },
     delete(item){
+        item = json(item);
+
         let current = this.items[item.id];
         let deleted = makeItem(current);
 
@@ -49,3 +75,7 @@ function makeItem(item) {
     return result;
 }
 
+
+function json(data) {
+    return JSON.parse(JSON.stringify(data));
+}

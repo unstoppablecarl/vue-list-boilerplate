@@ -1,3 +1,9 @@
+import {
+    updateItem,
+    deleteItem,
+    moveItem,
+} from './collection-helper';
+
 export default function ({server}) {
 
     return new Vuex.Store({
@@ -14,36 +20,53 @@ export default function ({server}) {
             delete(state, item){
                 deleteItem(state.items, item);
             },
+            move(state, {item, newIndex}){
+                moveItem(state.items, item, newIndex);
+            },
+            clear(state){
+                state.items = [];
+            }
+
         },
         actions: {
             create({commit}, item){
-                return server.create(item)
-                    .then(function (serverItem) {
-                        commit('create', serverItem);
-                    });
+                commit('create', serverItem);
             },
-            update({commit}, item){
-                return server.update(item)
-                    .then(function (serverItem) {
-                        commit('update', serverItem);
-                    });
+
+            update({commit, state}, item){
+                commit('update', serverItem);
             },
 
             delete({commit}, item){
-                return server.delete(item)
-                    .then(function (serverItem) {
-                        commit('delete', serverItem);
-                    });
+                commit('delete', serverItem);
             },
+
+            move({commit, state}, {item, newIndex}){
+                commit('move', {item, newIndex});
+            },
+
             fetch({commit}){
+                commit('clear');
+
                 return server.fetch()
                     .then(function (items) {
                         items.forEach(function (item) {
                             commit('create', item);
                         });
                     });
-            }
+            },
 
+            sync({commit, state}){
+
+                return server.sync(state.items)
+                    .then(function (items) {
+                        commit('clear');
+
+                        items.forEach(function (item) {
+                            commit('create', item);
+                        });
+                    });
+            }
         },
         getters: {
             items(state){
@@ -54,32 +77,3 @@ export default function ({server}) {
 
 }
 
-function findItemIndex(items, item) {
-    for (let i = 0; i < items.length; i++) {
-        let cItem = items[i];
-        if (cItem && item.id == cItem.id) {
-            return i;
-        }
-    }
-    console.error('not found', item);
-
-    return false;
-}
-
-function updateItem(items, item) {
-    let index = findItemIndex(items, item);
-    if (index === false) {
-        return;
-    }
-
-    items.splice(index, 1, item);
-}
-
-function deleteItem(items, item) {
-    let index = findItemIndex(items, item);
-    if (index === false) {
-        return;
-    }
-
-    items.splice(index, 1);
-}

@@ -9,10 +9,21 @@
 .list-item {
     padding: 5px;
     border: 1px solid #808080;
-    border-width: 0 1px 1px;
+    margin-top: -1px;
+    background: #fff;
 }
 
 .list-item-new {
     padding: 5px;
     border: 1px solid #808080;
+}
+
+.sortable-chosen {
+    opacity: 1 !important;
+    border: 1px solid #000;
+}
+
+.sortable-ghost {
+    border: 1px solid red;
+    background: #f9f9f9;
 }

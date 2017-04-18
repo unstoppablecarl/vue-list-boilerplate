@@ -1,5 +1,5 @@
 <template>
-    <div class="row list-item">
+    <div class="row list-item" :class="{ 'sortable-disabled': mode === 'edit' }">
         <div class="col-sm-1">
 
             <template v-if="mode === 'edit'">
@@ -42,7 +42,9 @@
         </div>
 
         <div class="col-sm-1">
-            {{item.revision}}
+            <div class="form-control-static">
+                {{item.revision}}
+            </div>
         </div>
 
         <div class="col-sm-2">
