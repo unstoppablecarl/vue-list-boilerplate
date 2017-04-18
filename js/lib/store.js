@@ -1,3 +1,8 @@
+import {
+    updateItem,
+    deleteItem,
+} from './collection-helper';
+
 export default function ({server}) {
 
     return new Vuex.Store({
@@ -52,34 +57,4 @@ export default function ({server}) {
         }
     });
 
-}
-
-function findItemIndex(items, item) {
-    for (let i = 0; i < items.length; i++) {
-        let cItem = items[i];
-        if (cItem && item.id == cItem.id) {
-            return i;
-        }
-    }
-    console.error('not found', item);
-
-    return false;
-}
-
-function updateItem(items, item) {
-    let index = findItemIndex(items, item);
-    if (index === false) {
-        return;
-    }
-
-    items.splice(index, 1, item);
-}
-
-function deleteItem(items, item) {
-    let index = findItemIndex(items, item);
-    if (index === false) {
-        return;
-    }
-
-    items.splice(index, 1);
 }
