@@ -6,8 +6,10 @@ import {
 export default function ({server}) {
 
     return new Vuex.Store({
+        strict: true,
         state: {
             items: [],
+            new_item_upload_percent: 0,
         },
         mutations: {
             create(state, item){
@@ -19,21 +21,37 @@ export default function ({server}) {
             delete(state, item){
                 deleteItem(state.items, item);
             },
+            fetch(state, items){
+                state.items = items;
+            }
         },
         actions: {
-            create({commit}, item){
-                return server.create(item)
+            create({commit, state}, item){
+                state.new_item_upload_percent = 0;
+
+                let callback = function (x, percent) {
+                    state.new_item_upload_percent = percent;
+                };
+
+                return server.create(item, callback)
                     .then(function (serverItem) {
                         commit('create', serverItem);
                     });
             },
-            update({commit}, item){
-                return server.update(item)
+            update({commit, state}, item){
+                let callback = function (x, percent) {
+                    console.log('percent', percent);
+                    commit('update', {
+                        id: item.id,
+                        upload_percent: percent
+                    });
+                };
+
+                return server.update(item, callback)
                     .then(function (serverItem) {
                         commit('update', serverItem);
                     });
             },
-
             delete({commit}, item){
                 return server.delete(item)
                     .then(function (serverItem) {
@@ -43,9 +61,7 @@ export default function ({server}) {
             fetch({commit}){
                 return server.fetch()
                     .then(function (items) {
-                        items.forEach(function (item) {
-                            commit('create', item);
-                        });
+                        commit('fetch', items);
                     });
             }
 

@@ -7,7 +7,7 @@
             </template>
 
             <div class="form-control-static">
-                {{item.id}}
+                {{model.id}}
             </div>
         </div>
 
@@ -20,7 +20,7 @@
             </template>
             <template v-if="mode === 'view'">
                 <div class="form-control-static">
-                    {{item.name}}
+                    {{model.name}}
                 </div>
             </template>
         </div>
@@ -35,7 +35,7 @@
             <template v-if="mode === 'view'">
 
                 <div class="form-control-static">
-                    {{item.desc}}
+                    {{model.desc}}
                 </div>
 
             </template>
@@ -46,10 +46,14 @@
 
                 <label>Image</label>
 
-                <input type="file" @change="onFileChange" class="form-control">
+                <field-file
+                        @file-changed="model.file = $event"
+                        @file-preview-changed="thumb_preview = $event"
+                        ref="input_file"
+                >
+                </field-file>
 
             </template>
-
 
             <template v-if="mode === 'view'">
 
@@ -61,25 +65,22 @@
 
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <template v-if="mode === 'edit'">
-
                 <label>Image</label>
             </template>
 
-            <div v-if="model.file_url_thumb">
-                <img :src="model.file_url_thumb" class="img-responsive"/>
-            </div>
-        </div>
-
-        <div class="col-sm-1">
-            <div class="form-control-static">
-                {{item.revision}}
-
+            <div v-if="file_url_thumb">
+                <img :src="file_url_thumb" class="img-responsive"/>
             </div>
         </div>
 
         <div class="col-sm-2">
+            <template v-if="mode === 'saving'">
+                <label>Saving</label><br>
+                {{upload_percent}} %
+            </template>
+
             <template v-if="mode === 'edit'">
                 <label>Editing</label><br>
 
@@ -87,6 +88,7 @@
                 <button class="btn btn-default" @click="cancelEdit()">Cancel</button>
 
             </template>
+
             <template v-if="mode === 'view'">
                 <button class="btn btn-default" @click="edit()">Edit</button>
                 <button class="btn btn-danger" @click="remove()">Delete</button>
@@ -97,25 +99,47 @@
 </template>
 
 <script>
+    import FieldFile from './field-file';
+    import Model from '../lib/model';
+
+    let model = Model({
+        defaults: {
+            id: null,
+            name: null,
+            desc: null,
+
+            file: null,
+            file_name: null,
+            file_size: null,
+            file_url: null,
+            file_url_thumb: null,
+            file_url_thumb_fit: null,
+        }
+    });
+
     export default {
         name: 'list-item',
+        components: {
+            FieldFile,
+        },
         props: {
             item: {
                 type: Object,
-
             },
+        },
+        created(){
+            this.resetModel();
         },
         data() {
             return {
                 mode: 'view',
-                model: this.item,
-            }
+                thumb_preview: null,
+                model: model.parse(this.item),
+            };
         },
         methods: {
             resetModel(){
-                this.model = _.extend({
-                    file_url_thumb: null,
-                }, this.item);
+                this.model = model.parse(this.item);
             },
             edit(){
                 this.resetModel();
@@ -127,51 +151,33 @@
             },
 
             save(){
-                this.mode = 'view';
-                this.$store.dispatch('update', {
-                    id: this.model.id,
-                    name: this.model.name,
-                    desc: this.model.desc,
-                    file: this.model.file,
-                });
+                this.mode = 'saving';
 
+                this.$store
+                    .dispatch('update', this.model)
+                    .then(() => {
+                        this.mode = 'view';
+                        this.thumb_preview = null;
+                    });
             },
-
-            onFileChange(e) {
-                let files = e.target.files || e.dataTransfer.files;
-                if (!files.length) {
-                    return;
-                }
-                this.setImage(files[0]);
-            },
-
-            setImage(file) {
-                let reader = new FileReader();
-                let vm     = this;
-
-                this.model.file      = file;
-                this.model.file_name = file.name;
-
-//                var fs = filesize(file.size);
-
-//                console.log(fs);
-
-                reader.onload = (e) => {
-                    vm.model.file_url_thumb = e.target.result;
-                };
-                reader.readAsDataURL(file);
-
-            },
-
             remove(){
                 this.$store.dispatch('delete', this.model);
             },
+
         },
         watch: {
             item(item){
-                this.model = _.extend({}, item);
-            }
+                this.model = model.parse(item);
+            },
         },
+        computed: {
+            file_url_thumb(){
+                if (this.thumb_preview) {
+                    return this.thumb_preview;
+                }
+                return this.model.file_url_thumb;
+            }
+        }
     }
 </script>
 

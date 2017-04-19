@@ -18,13 +18,14 @@ export default {
                 return res.data;
             });
     },
-    create(item){
+    create(item, progressCallback){
 
         var data = toFormData(item);
+
         var config = {
             onUploadProgress: function (progressEvent) {
-                var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                console.log('percentCompleted', percentCompleted);
+                let percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                progressCallback(item, percent);
             }
         };
 
@@ -40,10 +41,14 @@ export default {
             });
 
     },
-    update(item){
-        console.log('item', item);
+    update(item, progressCallback){
         var data   = toFormData(item);
-        var config = {};
+        var config = {
+            onUploadProgress: function (progressEvent) {
+                let percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                progressCallback(item, percent);
+            }
+        };
         var url    = BASE_URL + '/update/' + item.id;
 
         return axios.post(url, data, config)
