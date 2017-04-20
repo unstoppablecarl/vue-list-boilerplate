@@ -3,6 +3,8 @@ import Store from './lib/store';
 //import server from './lib/fake-server';
 import server from './lib/server';
 
+import List from './components/list.vue';
+
 let store = Store({
     server
 });
@@ -10,6 +12,9 @@ let store = Store({
 let app = new Vue({
     el: '#app',
     store: store,
+    components: {
+        List
+    }
 });
 
 global.app = app;

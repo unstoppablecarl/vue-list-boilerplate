@@ -45,7 +45,6 @@
             <template v-if="mode === 'edit'">
 
                 <label>Image</label>
-
                 <field-file
                         @file-changed="model.file = $event"
                         @file-preview-changed="thumb_preview = $event"
@@ -58,7 +57,10 @@
             <template v-if="mode === 'view'">
 
                 <div class="form-control-static">
-                    {{model.file_name}}
+
+                    <a :href="model.file_url" target="_blank">
+                        {{model.file_name}}
+                    </a>
                 </div>
 
             </template>
@@ -70,9 +72,14 @@
                 <label>Image</label>
             </template>
 
-            <div v-if="file_url_thumb">
-                <img :src="file_url_thumb" class="img-responsive"/>
-            </div>
+            <template v-if="thumb_preview">
+                <img :src="thumb_preview" class="img-responsive"/>
+            </template>
+
+            <template v-else-if="model.file_url_thumb">
+                <img :src="model.file_url_thumb" class="img-responsive"/>
+            </template>
+
         </div>
 
         <div class="col-sm-2">
@@ -113,7 +120,6 @@
             file_size: null,
             file_url: null,
             file_url_thumb: null,
-            file_url_thumb_fit: null,
         }
     });
 
@@ -126,9 +132,6 @@
             item: {
                 type: Object,
             },
-        },
-        created(){
-            this.resetModel();
         },
         data() {
             return {
@@ -170,19 +173,10 @@
                 this.model = model.parse(item);
             },
         },
-        computed: {
-            file_url_thumb(){
-                if (this.thumb_preview) {
-                    return this.thumb_preview;
-                }
-                return this.model.file_url_thumb;
-            }
-        }
     }
 </script>
 
 
 <style lang="scss" scoped>
-
 
 </style>

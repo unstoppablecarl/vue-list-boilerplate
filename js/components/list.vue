@@ -46,9 +46,11 @@
 
 <script>
     import ListItemNew from './list-item-new';
+    import ListItem from './list-item';
 
     export default {
         components: {
+            ListItem,
             ListItemNew
         },
         name: 'list',
