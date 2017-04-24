@@ -6,6 +6,7 @@ import {
 export default function ({server}) {
 
     return new Vuex.Store({
+        strict: true,
         state: {
             items: [],
             asyncState: null,
@@ -25,7 +26,10 @@ export default function ({server}) {
             },
             asyncState(state, value){
                 state.asyncState = value;
-            }
+            },
+            fetch(state, items){
+                state.items = items;
+            },
         },
         actions: {
             create({commit, state}, item){
@@ -68,23 +72,21 @@ export default function ({server}) {
                     .then(function (items) {
 
                         commit('asyncState', null);
-                        items.forEach(function (item) {
-                            commit('create', item);
-                        });
+                        commit('fetch', items);
 
                     });
             },
-            sync({commit, state}){
+			sync({commit, state}){
+                commit('asyncState', 'syncing');
 
                 return server.sync(state.items)
                     .then(function (items) {
-                        commit('clear');
 
-                        items.forEach(function (item) {
-                            commit('create', item);
-                        });
+                        commit('asyncState', null);
+                        commit('fetch', items);
+
                     });
-            }
+            },
         },
         getters: {
             items(state){
@@ -92,9 +94,7 @@ export default function ({server}) {
             },
             asyncState(state){
                 return state.asyncState;
-            }
+            },
         }
     });
-
 }
-
