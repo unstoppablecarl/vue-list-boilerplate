@@ -9,8 +9,3 @@ global._     = _;
 global.Vue   = Vue;
 global.axios = axios;
 global.Vuex  = Vuex;
-
-Vue.component('draggable', require('vuedraggable'));
-
-Vue.component('list', require('./components/list.vue'));
-Vue.component('list-item', require('./components/list-item.vue'));

@@ -25,37 +25,61 @@ export default function ({server}) {
             },
             clear(state){
                 state.items = [];
+            },
+            asyncState(state, value){
+                state.asyncState = value;
             }
-
         },
         actions: {
-            create({commit}, item){
-                commit('create', serverItem);
-            },
+            create({commit, state}, item){
+                commit('asyncState', 'creating');
 
-            update({commit, state}, item){
-                commit('update', serverItem);
-            },
+                return server.create(item)
+                    .then(function (serverItem) {
 
+                        commit('asyncState', null);
+                        commit('create', serverItem);
+
+                    });
+            },
+            update({commit}, item){
+                commit('asyncState', 'updating');
+
+                return server.update(item)
+                    .then(function (serverItem) {
+
+                        commit('asyncState', null);
+                        commit('update', serverItem);
+
+                    });
+            },
             delete({commit}, item){
-                commit('delete', serverItem);
-            },
+                commit('asyncState', 'deleting');
 
+                return server.delete(item)
+                    .then(function (serverItem) {
+
+                        commit('asyncState', null);
+                        commit('delete', serverItem);
+
+                    });
+            },
             move({commit, state}, {item, newIndex}){
                 commit('move', {item, newIndex});
             },
-
             fetch({commit}){
-                commit('clear');
+                commit('asyncState', 'fetching');
 
                 return server.fetch()
                     .then(function (items) {
+
+                        commit('asyncState', null);
                         items.forEach(function (item) {
                             commit('create', item);
                         });
+
                     });
             },
-
             sync({commit, state}){
 
                 return server.sync(state.items)
@@ -71,6 +95,9 @@ export default function ({server}) {
         getters: {
             items(state){
                 return state.items;
+            },
+            asyncState(state){
+                return state.asyncState;
             }
         }
     });

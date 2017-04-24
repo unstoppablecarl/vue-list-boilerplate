@@ -1,5 +1,5 @@
 <template>
-    <div class="row list-item" :class="{ 'sortable-disabled': mode === 'edit' }">
+    <div class="row list-item" :class="{ 'list-item-sortable': mode === 'view'}">
         <div class="col-sm-1">
 
             <template v-if="mode === 'edit'">
@@ -15,10 +15,10 @@
             <template v-if="mode === 'edit'">
 
                 <label>Name</label>
-                <input class="form-control" v-model="model.name">
+                <input type="text" class="form-control" v-model="model.name">
 
             </template>
-            <template v-if="mode === 'view'">
+            <template v-else>
                 <div class="form-control-static">
                     {{item.name}}
                 </div>
@@ -29,10 +29,10 @@
             <template v-if="mode === 'edit'">
 
                 <label>Desc</label>
-                <input class="form-control" v-model="model.desc">
+                <input type="text" class="form-control" v-model="model.desc">
 
             </template>
-            <template v-if="mode === 'view'">
+            <template v-else>
 
                 <div class="form-control-static">
                     {{item.desc}}
@@ -48,17 +48,27 @@
         </div>
 
         <div class="col-sm-2">
-            <template v-if="mode === 'edit'">
-                <label>Editing</label><br>
 
-                <button class="btn btn-success" @click="save()">Save</button>
-                <button class="btn btn-default" @click="cancelEdit()">Cancel</button>
-
+            <template v-if="mode === 'save'">
+                <label>Saving</label><br>
             </template>
+
+            <template v-if="mode === 'delete'">
+                <label>Deleting</label><br>
+            </template>
+
+            <template v-if="mode === 'edit'">
+                <label>Editing</label>
+                <br>
+                <button class="btn btn-success" :disabled="!itemValid" @click="save()">Save</button>
+                <button class="btn btn-default" @click="cancelEdit()">Cancel</button>
+            </template>
+
             <template v-if="mode === 'view'">
                 <button class="btn btn-default" @click="edit()">Edit</button>
                 <button class="btn btn-danger" @click="remove()">Delete</button>
             </template>
+
         </div>
 
     </div>
@@ -75,6 +85,7 @@
         data() {
             return {
                 mode: 'view',
+                model: _.extend({}, this.item),
             }
         },
         methods: {
@@ -91,19 +102,25 @@
             },
 
             save(){
-                this.mode = 'view';
-                this.$store.dispatch('update', this.model);
+                this.mode = 'save';
+                this.$store
+                    .dispatch('update', this.model)
+                    .then(() => {
+                        this.mode = 'view';
+                    });
             },
 
             remove(){
-                this.$store.dispatch('delete', this.model);
+                this.mode = 'delete';
+                this.$store
+                    .dispatch('delete', this.model);
             },
         },
-        watch: {
-            item(item){
-                this.model = _.extend({}, item);
+		computed: {
+            itemValid(){
+                return this.model.name || this.model.desc;
             }
-        },
+        }
     }
 </script>
 

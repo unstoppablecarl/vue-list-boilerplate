@@ -1,6 +1,12 @@
 import './_init';
 import Store from './lib/store';
-import server from './lib/fake-server';
+import Server from './lib/fake-server';
+import List from './components/list.vue';
+
+let server = Server({
+    responseDelay: 2000
+});
+
 
 let store = Store({
     server
@@ -9,6 +15,9 @@ let store = Store({
 let app = new Vue({
     el: '#app',
     store: store,
+    components: {
+        List
+    },
 });
 
 // seed some server data

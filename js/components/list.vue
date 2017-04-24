@@ -35,55 +35,23 @@
             </draggable>
         </div>
 
-        <br>
-        <br>
-
-        <div class="row list-item-new">
-            <div class="col-sm-1">
-            </div>
-            <div class="col-sm-4">
-                <input
-                        class="form-control"
-                        v-model="newItem.name"
-                        @keyup.enter="addItem()"
-                        placeholder="Name"
-                >
-            </div>
-            <div class="col-sm-4">
-
-                <input
-                        class="form-control"
-                        v-model="newItem.desc"
-                        @keyup.enter="addItem()"
-                        placeholder="Desc"
-                >
-            </div>
-
-            <div class="col-sm-1">
-
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-success" @click="addItem()">Add</button>
-            </div>
-        </div>
+        <list-item-new></list-item-new>
     </div>
 
 </template>
 
 <script>
-
+    import ListItem from './list-item';
+    import ListItemNew from './list-item-new';
+    import draggable from 'vuedraggable';
     export default {
         name: 'list',
-        data: function () {
-            return {
-                newItem: {},
-            };
+        components: {
+            ListItem,
+            ListItemNew,
+            draggable,
         },
         methods: {
-            addItem() {
-                this.$store.dispatch('create', this.newItem);
-                this.newItem = {};
-            },
             onSortableChange(event){
                 let moved = event.moved;
                 if (!moved) {
@@ -96,9 +64,6 @@
                 };
 
                 this.$store.dispatch('move', settings);
-
-                console.log('change', event);
-
             }
         },
         computed: {
@@ -110,10 +75,15 @@
                 return {
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',  // Class name for the chosen item
-                    filter: '.sortable-disabled',  // Selectors that do not lead to dragging (String or Function)
-                    forceFallback: true
+                    filter: 'input',  // Selectors that do not lead to dragging (String or Function)
+                    preventOnFilter: false,
+                    forceFallback: true,
+                    draggable: '.list-item-sortable'
                 };
             },
+            loading(){
+                return this.$store.getters.asyncState === 'fetching';
+            }
 
         }
     }
