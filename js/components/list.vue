@@ -26,62 +26,35 @@
                     :item="item"
             ></list-item>
 
+            <template v-if="loading">
+                <h3 class="text-center">Loading... </h3>
+            </template>
+
         </div>
 
-        <br>
-        <br>
+        <list-item-new></list-item-new>
 
-        <div class="row list-item-new">
-            <div class="col-sm-1">
-            </div>
-            <div class="col-sm-4">
-                <input
-                        class="form-control"
-                        v-model="newItem.name"
-                        @keyup.enter="addItem()"
-                        placeholder="Name"
-                >
-            </div>
-            <div class="col-sm-4">
-
-                <input
-                        class="form-control"
-                        v-model="newItem.desc"
-                        @keyup.enter="addItem()"
-                        placeholder="Desc"
-                >
-            </div>
-
-            <div class="col-sm-1">
-                
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-success" @click="addItem()">Add</button>
-            </div>
-        </div>
     </div>
 
 </template>
 
 <script>
+    import ListItem from './list-item';
+    import ListItemNew from './list-item-new';
 
     export default {
         name: 'list',
-        data: function () {
-            return {
-                newItem: {},
-            };
-        },
-        methods: {
-            addItem() {
-                this.$store.dispatch('create', this.newItem);
-                this.newItem = {};
-            },
+        components: {
+            ListItem,
+            ListItemNew
         },
         computed: {
             items(){
                 return this.$store.getters.items;
             },
+            loading(){
+                return this.$store.getters.asyncState === 'fetching';
+            }
         }
     }
 </script>
