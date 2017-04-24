@@ -54,7 +54,7 @@
             },
             loading(){
                 return this.$store.getters.asyncState === 'fetching';
-            }
+            },
         }
     }
 </script>

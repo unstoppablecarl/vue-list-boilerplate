@@ -19,7 +19,6 @@
             </div>
         </div>
 
-
         <div class="row list-item-new">
             <div class="col-sm-1">
             </div>
@@ -44,7 +43,7 @@
                     <input class="form-control" v-model="desc">
 
                 </template>
-                <template v-if="mode === 'saving'">
+                <template v-else>
 
                     <div class="form-control-static">
                         {{desc}}
@@ -56,7 +55,7 @@
             </div>
             <div class="col-sm-2">
 
-                <template v-if="mode === 'saving'">
+                <template v-if="mode === 'save'">
                     <strong>Saving</strong>
                 </template>
 

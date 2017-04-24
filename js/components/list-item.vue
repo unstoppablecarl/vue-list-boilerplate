@@ -15,7 +15,7 @@
             <template v-if="mode === 'edit'">
 
                 <label>Name</label>
-                <input class="form-control" v-model="model.name">
+                <input type="text" class="form-control" v-model="model.name">
 
             </template>
             <template v-else>
@@ -29,7 +29,7 @@
             <template v-if="mode === 'edit'">
 
                 <label>Desc</label>
-                <input class="form-control" v-model="model.desc">
+                <input type="text" class="form-control" v-model="model.desc">
 
             </template>
             <template v-else>
@@ -75,22 +75,41 @@
 </template>
 
 <script>
+
+	import Model from '../lib/model';
+
+    let model = Model({
+        defaults: {
+            id: null,
+            name: null,
+            desc: null,
+
+            file: null,
+            file_name: null,
+            file_size: null,
+            file_url: null,
+            file_url_thumb: null,
+        }
+    });
+
+    let parse = model.parse;
+
     export default {
         name: 'list-item',
         props: {
             item: {
-                type: Object
+                type: Object,
             },
         },
         data() {
             return {
                 mode: 'view',
-                model: _.extend({}, this.item),
-            }
+				model: parse(this.item),
+            };
         },
         methods: {
             resetModel(){
-                this.model = _.extend({}, this.item);
+                this.model = parse(this.item);
             },
             edit(){
                 this.resetModel();
@@ -109,7 +128,6 @@
                         this.mode = 'view';
                     });
             },
-
             remove(){
                 this.mode = 'delete';
 
@@ -127,6 +145,5 @@
 
 
 <style lang="scss" scoped>
-
 
 </style>
