@@ -20,6 +20,9 @@ export default function ({server}) {
             delete(state, item){
                 deleteItem(state.items, item);
             },
+			clear(state){
+                state.items = [];
+            },
             asyncState(state, value){
                 state.asyncState = value;
             }
@@ -47,7 +50,6 @@ export default function ({server}) {
 
                     });
             },
-
             delete({commit}, item){
                 commit('asyncState', 'deleting');
 
@@ -71,8 +73,18 @@ export default function ({server}) {
                         });
 
                     });
-            }
+            },
+            sync({commit, state}){
 
+                return server.sync(state.items)
+                    .then(function (items) {
+                        commit('clear');
+
+                        items.forEach(function (item) {
+                            commit('create', item);
+                        });
+                    });
+            }
         },
         getters: {
             items(state){
@@ -85,3 +97,4 @@ export default function ({server}) {
     });
 
 }
+

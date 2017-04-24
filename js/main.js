@@ -40,5 +40,3 @@ data.forEach(function (item) {
 });
 
 app.$store.dispatch('fetch');
-
-window.app = app;

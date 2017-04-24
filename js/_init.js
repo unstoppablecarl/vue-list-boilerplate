@@ -9,4 +9,3 @@ global._     = _;
 global.Vue   = Vue;
 global.axios = axios;
 global.Vuex  = Vuex;
-
