@@ -50,10 +50,10 @@
         },
         computed: {
             items(){
-                return this.$store.getters.items;
+                return this.$store.state.items;
             },
             loading(){
-                return this.$store.getters.asyncState === 'fetching';
+                return this.$store.state.async_state === 'fetching';
             },
         }
     }

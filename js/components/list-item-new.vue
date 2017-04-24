@@ -12,7 +12,7 @@
                 Desc
             </div>
             <div class="col-sm-1">
-                Revision
+
             </div>
             <div class="col-sm-2">
                 Actions
@@ -25,13 +25,13 @@
             <div class="col-sm-4">
                 <template v-if="mode === 'edit'">
 
-                    <input class="form-control" v-model="name">
+                    <input class="form-control" v-model="model.name">
 
                 </template>
 
-                <template v-if="mode === 'saving'">
+                <template v-if="mode === 'save'">
                     <div class="form-control-static">
-                        {{name}}
+                        {{model.name}}
                     </div>
                 </template>
 
@@ -40,13 +40,13 @@
             <div class="col-sm-4">
                 <template v-if="mode === 'edit'">
 
-                    <input class="form-control" v-model="desc">
+                    <input class="form-control" v-model="model.desc">
 
                 </template>
                 <template v-else>
 
                     <div class="form-control-static">
-                        {{desc}}
+                        {{model.desc}}
                     </div>
 
                 </template>
@@ -56,7 +56,9 @@
             <div class="col-sm-2">
 
                 <template v-if="mode === 'save'">
-                    <strong>Saving</strong>
+                    <div class="form-control-static">
+                        <strong>Saving</strong>
+                    </div>
                 </template>
 
                 <template v-if="mode === 'edit'">
@@ -72,35 +74,36 @@
 </template>
 
 <script>
+    import Model from '../lib/model';
 
-    function start() {
-        return {
-            mode: 'edit',
+    let { defaults } = Model({
+        defaults: {
             name: null,
             desc: null,
         }
-    }
+    });
 
     export default {
         name: 'list-item-new',
 
         data() {
-            return start()
+            return this.data();
         },
         methods: {
+            data() {
+                return {
+                    mode: 'edit',
+                    model: defaults(),
+                };
+            },
             reset(){
-                _.extend(this.$data, start());
+                _.extend(this.$data, this.data());
             },
             add() {
-                this.mode = 'saving';
-
-                let newItem = {
-                    name: this.name,
-                    desc: this.desc,
-                };
+                this.mode = 'save';
 
                 this.$store
-                    .dispatch('create', newItem)
+                    .dispatch('create', this.model)
                     .then(() => {
                         this.reset();
                     });
@@ -108,7 +111,7 @@
         },
         computed: {
             itemValid(){
-                return this.name || this.desc;
+                return this.model.name || this.model.desc;
             }
         }
     }

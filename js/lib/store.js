@@ -9,7 +9,7 @@ export default function ({server}) {
         strict: true,
         state: {
             items: [],
-            asyncState: null,
+            async_state: null,
         },
         mutations: {
             create(state, item){
@@ -24,8 +24,8 @@ export default function ({server}) {
 			clear(state){
                 state.items = [];
             },
-            asyncState(state, value){
-                state.asyncState = value;
+            async_state(state, value){
+                state.async_state = value;
             },
             fetch(state, items){
                 state.items = items;
@@ -33,68 +33,61 @@ export default function ({server}) {
         },
         actions: {
             create({commit, state}, item){
-                commit('asyncState', 'creating');
+                commit('async_state', 'creating');
 
                 return server.create(item)
                     .then(function (serverItem) {
 
-                        commit('asyncState', null);
+                        commit('async_state', null);
                         commit('create', serverItem);
 
                     });
             },
             update({commit}, item){
-                commit('asyncState', 'updating');
+                commit('async_state', 'updating');
 
                 return server.update(item)
                     .then(function (serverItem) {
 
-                        commit('asyncState', null);
+                        commit('async_state', null);
                         commit('update', serverItem);
 
                     });
             },
             delete({commit}, item){
-                commit('asyncState', 'deleting');
+                commit('async_state', 'deleting');
 
                 return server.delete(item)
                     .then(function (serverItem) {
 
-                        commit('asyncState', null);
+                        commit('async_state', null);
                         commit('delete', serverItem);
 
                     });
             },
             fetch({commit}){
-                commit('asyncState', 'fetching');
+                commit('async_state', 'fetching');
 
                 return server.fetch()
                     .then(function (items) {
 
-                        commit('asyncState', null);
+                        commit('async_state', null);
                         commit('fetch', items);
 
                     });
             },
 			sync({commit, state}){
-                commit('asyncState', 'syncing');
+                commit('async_state', 'syncing');
 
                 return server.sync(state.items)
                     .then(function (items) {
 
-                        commit('asyncState', null);
+                        commit('async_state', null);
                         commit('fetch', items);
 
                     });
             },
         },
-        getters: {
-            items(state){
-                return state.items;
-            },
-            asyncState(state){
-                return state.asyncState;
-            },
-        }
+
     });
 }

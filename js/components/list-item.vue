@@ -7,7 +7,7 @@
             </template>
 
             <div class="form-control-static">
-                {{item.id}}
+                {{model.id}}
             </div>
         </div>
 
@@ -20,7 +20,7 @@
             </template>
             <template v-else>
                 <div class="form-control-static">
-                    {{item.name}}
+                    {{model.name}}
                 </div>
             </template>
         </div>
@@ -32,10 +32,11 @@
                 <input type="text" class="form-control" v-model="model.desc">
 
             </template>
+
             <template v-else>
 
                 <div class="form-control-static">
-                    {{item.desc}}
+                    {{model.desc}}
                 </div>
 
             </template>
@@ -43,18 +44,22 @@
 
         <div class="col-sm-1">
             <div class="form-control-static">
-                {{item.revision}}
+                {{model.revision}}
             </div>
         </div>
 
         <div class="col-sm-2">
 
             <template v-if="mode === 'save'">
-                <label>Saving</label><br>
+                <div class="form-control-static">
+                    <strong>Saving</strong>
+                </div>
             </template>
 
             <template v-if="mode === 'delete'">
-                <label>Deleting</label><br>
+                <div class="form-control-static">
+                    <strong>Deleting</strong>
+                </div>
             </template>
 
             <template v-if="mode === 'edit'">
@@ -76,23 +81,16 @@
 
 <script>
 
-	import Model from '../lib/model';
+    import Model from '../lib/model';
 
-    let model = Model({
+    let {parse} = Model({
         defaults: {
             id: null,
             name: null,
             desc: null,
-
-            file: null,
-            file_name: null,
-            file_size: null,
-            file_url: null,
-            file_url_thumb: null,
+            revision: null,
         }
     });
-
-    let parse = model.parse;
 
     export default {
         name: 'list-item',
@@ -104,7 +102,7 @@
         data() {
             return {
                 mode: 'view',
-				model: parse(this.item),
+                model: parse(this.item),
             };
         },
         methods: {
@@ -134,6 +132,11 @@
                 this.$store
                     .dispatch('delete', this.model);
             },
+        },
+        watch: {
+            item(item){
+                this.model = parse(item);
+            }
         },
         computed: {
             itemValid(){
