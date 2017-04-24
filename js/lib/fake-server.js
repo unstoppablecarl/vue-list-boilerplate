@@ -1,55 +1,67 @@
-let idIncrement = 1;
+export default function ({
+                             emptyItem = {
+                                 id: null,
+                                 name: null,
+                                 desc: null,
+                                 revision: null,
+                             },
+                             responseDelay = 2000,
+                             fetchResponseDelay = 500,
+                         }) {
 
-const emptyItem = {
-    id: null,
-    name: null,
-    desc: null,
-    revision: null,
-};
+    let idIncrement = 1;
 
-export default {
-    items: {},
-    fetch(){
-        let data = _.values(this.items);
+    return {
+        items: {},
+        fetch(){
+            let data = _.values(this.items);
 
-        console.log('server', 'fetch', data);
-        return Promise.resolve(data);
-    },
-    create(item){
-        item = json(item);
+            console.log('server', 'fetch', data);
+            return delayedResponse(data, fetchResponseDelay);
 
-        item.id             = idIncrement++;
-        let created         = makeItem(item);
-        this.items[item.id] = created;
+        },
+        create(item){
+            item = json(item);
 
-        console.log('server', 'create', created);
-        return Promise.resolve(created);
-    },
-    update(item){
-        item = json(item);
-        let current = this.items[item.id];
-        item.revision = current.revision;
-        let updated         = makeItem(item);
-        this.items[item.id] = updated;
+            item.id             = idIncrement++;
+            let created         = makeItem(item);
+            this.items[item.id] = created;
 
-        console.log('server', 'update', updated);
-        return Promise.resolve(updated);
+            console.log('server', 'create', created);
+            return delayedResponse(created, responseDelay);
 
-    },
-    delete(item){
-        item = json(item);
+        },
+        update(item){
+            item                = json(item);
+            let current         = this.items[item.id];
+            item.revision       = current.revision;
+            let updated         = makeItem(item);
+            this.items[item.id] = updated;
 
-        let current = this.items[item.id];
-        let deleted = makeItem(current);
+            console.log('server', 'update', updated);
+            return delayedResponse(updated, responseDelay);
 
-        delete this.items[item.id];
+        },
+        delete(item){
+            item = json(item);
 
-        console.log('server', 'delete', deleted);
-        return Promise.resolve(deleted);
+            let current = this.items[item.id];
+            let deleted = makeItem(current);
+
+            delete this.items[item.id];
+
+            console.log('server', 'delete', deleted);
+            return delayedResponse(deleted, responseDelay);
+        }
+    };
+
+    function makeItem(item) {
+        return itemFactory(item, emptyItem);
     }
-};
 
-function makeItem(item) {
+}
+
+function itemFactory(item, emptyItem) {
     let result = _.extend({revision: 0}, emptyItem, item);
 
     result.revision++;
@@ -57,7 +69,14 @@ function makeItem(item) {
     return result;
 }
 
-
 function json(data) {
     return JSON.parse(JSON.stringify(data));
+}
+
+function delayedResponse(value, delay) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(value)
+        }, delay);
+    });
 }

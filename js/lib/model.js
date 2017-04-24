@@ -1,6 +1,10 @@
 export default ModelFactory;
 
-function ModelFactory({defaults = {}}) {
+
+function ModelFactory({
+                          defaults = {},
+                          parse = null,
+                      }) {
 
     const validKeys = Object.keys(defaults);
 
@@ -10,10 +14,11 @@ function ModelFactory({defaults = {}}) {
         },
         parse(data){
             let parsed = _.pick(data, validKeys);
-            return _.extend(this.defaults(), parsed);
+            let result = _.extend(this.defaults(), parsed);
+            if (parse) {
+                result = parse(result);
+            }
+            return result;
         },
     }
 }
-
-
-

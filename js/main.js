@@ -1,9 +1,12 @@
 import './_init';
 import Store from './lib/store';
 //import server from './lib/fake-server';
-import server from './lib/server';
-
+import Server from './lib/server';
 import List from './components/list.vue';
+
+let server = Server({
+    responseDelay: 2000
+});
 
 let store = Store({
     server
@@ -14,10 +17,8 @@ let app = new Vue({
     store: store,
     components: {
         List
-    }
+    },
 });
-
-global.app = app;
 
 //// seed some server data
 //let data = [
@@ -40,3 +41,5 @@ global.app = app;
 //});
 
 app.$store.dispatch('fetch');
+
+global.app = app;

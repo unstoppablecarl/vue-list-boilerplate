@@ -7,7 +7,7 @@
             </template>
 
             <div class="form-control-static">
-                {{model.id}}
+                {{item.id}}
             </div>
         </div>
 
@@ -15,12 +15,12 @@
             <template v-if="mode === 'edit'">
 
                 <label>Name</label>
-                <input class="form-control" v-model="model.name">
+                <input type="text" class="form-control" v-model="model.name">
 
             </template>
-            <template v-if="mode === 'view'">
+            <template v-else>
                 <div class="form-control-static">
-                    {{model.name}}
+                    {{item.name}}
                 </div>
             </template>
         </div>
@@ -29,13 +29,13 @@
             <template v-if="mode === 'edit'">
 
                 <label>Desc</label>
-                <input class="form-control" v-model="model.desc">
+                <input type="text" class="form-control" v-model="model.desc">
 
             </template>
-            <template v-if="mode === 'view'">
+            <template v-else>
 
                 <div class="form-control-static">
-                    {{model.desc}}
+                    {{item.desc}}
                 </div>
 
             </template>
@@ -54,7 +54,7 @@
 
             </template>
 
-            <template v-if="mode === 'view'">
+            <template v-else>
 
                 <div class="form-control-static">
 
@@ -83,23 +83,28 @@
         </div>
 
         <div class="col-sm-2">
-            <template v-if="mode === 'saving'">
+
+            <template v-if="mode === 'save'">
                 <label>Saving</label><br>
                 {{upload_percent}} %
             </template>
 
+            <template v-if="mode === 'delete'">
+                <label>Deleting</label><br>
+            </template>
+
             <template v-if="mode === 'edit'">
-                <label>Editing</label><br>
-
-                <button class="btn btn-success" @click="save()">Save</button>
+                <label>Editing</label>
+                <br>
+                <button class="btn btn-success" :disabled="!itemValid" @click="save()">Save</button>
                 <button class="btn btn-default" @click="cancelEdit()">Cancel</button>
-
             </template>
 
             <template v-if="mode === 'view'">
                 <button class="btn btn-default" @click="edit()">Edit</button>
                 <button class="btn btn-danger" @click="remove()">Delete</button>
             </template>
+
         </div>
 
     </div>
@@ -118,10 +123,10 @@
             file: null,
             file_name: null,
             file_size: null,
-            file_url: null,
-            file_url_thumb: null,
         }
     });
+
+    let parse = model.parse;
 
     export default {
         name: 'list-item',
@@ -137,12 +142,12 @@
             return {
                 mode: 'view',
                 thumb_preview: null,
-                model: model.parse(this.item),
+                model: parse(this.item),
             };
         },
         methods: {
             resetModel(){
-                this.model = model.parse(this.item);
+                this.model = parse(this.item);
             },
             edit(){
                 this.resetModel();
@@ -154,8 +159,7 @@
             },
 
             save(){
-                this.mode = 'saving';
-
+                this.mode = 'save';
                 this.$store
                     .dispatch('update', this.model)
                     .then(() => {
@@ -164,15 +168,17 @@
                     });
             },
             remove(){
-                this.$store.dispatch('delete', this.model);
-            },
+                this.mode = 'delete';
 
-        },
-        watch: {
-            item(item){
-                this.model = model.parse(item);
+                this.$store
+                    .dispatch('delete', this.model);
             },
         },
+        computed: {
+            itemValid(){
+                return this.model.name || this.model.desc;
+            }
+        }
     }
 </script>
 

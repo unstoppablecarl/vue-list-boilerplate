@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="list-item-new-container">
+
         <div class="row list-header">
             <div class="col-sm-1">
 
@@ -27,26 +28,28 @@
             <div class="col-sm-2">
                 <template v-if="mode === 'edit'">
 
-                    <input class="form-control" v-model="name">
+                    <input  type="text" class="form-control" v-model="model.name">
 
                 </template>
+
                 <template v-if="mode === 'saving'">
                     <div class="form-control-static">
-                        {{name}}
+                        {{model.name}}
                     </div>
                 </template>
+
             </div>
 
             <div class="col-sm-2">
                 <template v-if="mode === 'edit'">
 
-                    <input class="form-control" v-model="desc">
+                    <input  type="text" class="form-control" v-model="model.desc">
 
                 </template>
-                <template v-if="mode !== 'edit'">
+                <template v-else>
 
                     <div class="form-control-static">
-                        {{desc}}
+                        {{model.desc}}
                     </div>
 
                 </template>
@@ -55,7 +58,8 @@
             <div class="col-sm-2">
 
                 <field-file
-                    @file-preview-changed="onPreviewChanged"
+                    @file-changed="model.file = $event"
+                    @file-preview-changed="thumb_preview = $event"
                     ref="new_file"
                 >
                 </field-file>
@@ -72,14 +76,15 @@
 
             <div class="col-sm-2">
 
-                <template v-if="mode === 'saving'">
+                <template v-if="mode === 'save'">
                     <strong>Uploading</strong>
                     {{upload_percent}}%
                 </template>
-                <template v-if="mode === 'edit'">
-                    <button class="btn btn-success" @click="add()">Add</button>
 
-                    <template v-if="!modelEmpty">
+                <template v-if="mode === 'edit'">
+                    <button class="btn btn-success" :disabled="!itemValid" @click="add()">Add</button>
+
+                    <template v-if="itemValid">
                         <button class="btn btn-default" @click="reset()">Cancel</button>
                     </template>
                 </template>
@@ -90,13 +95,26 @@
 
 <script>
     import FieldFile from './field-file';
+    import Model from '../lib/model';
+
+    let model = Model({
+        defaults: {
+            id: null,
+            name: null,
+            desc: null,
+
+            file: null,
+            file_name: null,
+            file_size: null,
+            file_url: null,
+            file_url_thumb: null,
+        }
+    });
 
     function start() {
         return {
             mode: 'edit',
-            name: null,
-            desc: null,
-            file: null,
+            model: model.defaults(),
             thumb_preview: null,
         }
     }
@@ -105,11 +123,6 @@
         name: 'list-item-new',
         components: {
             FieldFile
-        },
-        props: {
-            upload_percent: {
-                type: Number
-            }
         },
         data() {
             return start()
@@ -129,14 +142,14 @@
                     });
             },
 
-            onPreviewChanged(preview){
-                this.thumb_preview = preview;
-            }
         },
         computed: {
-            modelEmpty(){
-                return !(this.name || this.desc || this.file);
-            }
+            itemValid(){
+                return this.name || this.desc || this.file;
+            },
+            new_item_upload_percent(){
+                return this.$store.state.new_item_upload_percent;
+            },
         }
     }
 </script>

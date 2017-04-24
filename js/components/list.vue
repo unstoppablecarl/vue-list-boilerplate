@@ -28,47 +28,38 @@
                     :item="item"
             ></list-item>
 
+            <template v-if="loading">
+                <h3 class="text-center">Loading... </h3>
+            </template>
+
         </div>
 
-        <br>
-        <br>
-
         <list-item-new
-
             :upload_percent="new_item_upload_percent"
         >
         </list-item-new>
 
-        <br><br>
     </div>
 
 </template>
 
 <script>
-    import ListItemNew from './list-item-new';
     import ListItem from './list-item';
+    import ListItemNew from './list-item-new';
 
     export default {
+        name: 'list',
         components: {
             ListItem,
             ListItemNew
-        },
-        name: 'list',
-        data: function () {
-            return {
-
-            };
-        },
-        methods: {
-
         },
         computed: {
             items(){
                 return this.$store.getters.items;
             },
-            new_item_upload_percent(){
-                return this.$store.state.new_item_upload_percent;
-            }
+            loading(){
+                return this.$store.getters.async_state === 'fetching';
+            },
         }
     }
 </script>
