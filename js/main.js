@@ -38,5 +38,5 @@ let data = [
 data.forEach(function (item) {
     server.create(item);
 });
-
+window.app = app
 app.$store.dispatch('fetch');

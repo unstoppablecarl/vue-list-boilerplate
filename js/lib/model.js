@@ -1,3 +1,5 @@
+import { extend, pick } from "lodash";
+
 export default ModelFactory;
 
 
@@ -9,13 +11,13 @@ function ModelFactory({
     const validKeys = Object.keys(defaults);
 
     function _defaults() {
-        return _.extend({}, defaults);
+        return extend({}, defaults);
     }
 
     function _parse(data) {
 
-        let parsed = _.pick(data, validKeys);
-        let result = _.extend(_defaults(), parsed);
+        let parsed = pick(data, validKeys);
+        let result = extend(_defaults(), parsed);
         if (parse) {
             result = parse(result);
         }

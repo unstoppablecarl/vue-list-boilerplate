@@ -76,6 +76,10 @@
 <script>
     import Model from '../lib/model';
 
+    import { extend } from "lodash";
+
+
+
     let { defaults } = Model({
         defaults: {
             name: null,
@@ -97,7 +101,7 @@
                 };
             },
             reset(){
-                _.extend(this.$data, this.data());
+                extend(this.$data, this.data());
             },
             add() {
                 this.mode = 'save';

@@ -22,8 +22,11 @@ mix
     .sourceMaps()
     .extract(['vue', 'vuex', 'axios'])
     .sass('sass/main.scss', 'build/css')
+
     .options({
         processCssUrls: false,
+        extractVueStyles: false,
     })
+
 
 
