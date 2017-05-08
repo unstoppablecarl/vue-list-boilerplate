@@ -1,3 +1,5 @@
+import { extend, findIndex } from "lodash";
+
 export {
     findItemById,
     findItemIndexById,
@@ -18,7 +20,7 @@ function findItemById(items, id) {
 }
 
 function findItemIndexById(items, id) {
-    let index = _.findIndex(items, ['id', id]);
+    let index = findIndex(items, ['id', id]);
     if (index === -1) {
         return false;
     }
@@ -45,7 +47,7 @@ function updateItem(items, item){
         throw Error('Item not found', item);
     }
     let current = items[index];
-    let updated = _.extend({}, current, item);
+    let updated = extend({}, current, item);
 
     items.splice(index, 1, updated);
 }

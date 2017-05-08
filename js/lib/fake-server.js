@@ -1,3 +1,5 @@
+import { extend, values } from "lodash";
+
 export default function ({
                              emptyItem = {
                                  id: null,
@@ -14,7 +16,7 @@ export default function ({
     return {
         items: {},
         fetch(){
-            let data = _.values(this.items);
+            let data = values(this.items);
 
             console.log('server', 'fetch', data);
             return delayedResponse(data, fetchResponseDelay);
@@ -62,7 +64,7 @@ export default function ({
 }
 
 function itemFactory(item, emptyItem) {
-    let result = _.extend({revision: 0}, emptyItem, item);
+    let result = extend({revision: 0}, emptyItem, item);
 
     result.revision++;
 

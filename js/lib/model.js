@@ -1,3 +1,6 @@
+import { extend, pick } from "lodash";
+
+
 export default ModelFactory;
 
 
@@ -10,11 +13,11 @@ function ModelFactory({
 
     return {
         defaults(){
-            return _.extend({}, defaults);
+            return extend({}, defaults);
         },
         parse(data){
-            let parsed = _.pick(data, validKeys);
-            let result = _.extend(this.defaults(), parsed);
+            let parsed = pick(data, validKeys);
+            let result = extend(this.defaults(), parsed);
             if (parse) {
                 result = parse(result);
             }

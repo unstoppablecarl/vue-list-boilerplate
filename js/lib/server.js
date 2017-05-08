@@ -1,4 +1,5 @@
 import * as axios from 'axios';
+import { each} from "lodash";
 
 
 const BASE_URL = 'http://make-the-cut.dev/test/1';
@@ -78,7 +79,7 @@ export default {
 function toFormData(item) {
 
     var data = new FormData();
-    _.each(item, function (val, key) {
+    each(item, function (val, key) {
         if (val !== null && val !== undefined) {
             data.append(key, val);
         }

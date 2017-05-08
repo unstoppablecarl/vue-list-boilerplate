@@ -96,6 +96,7 @@
 <script>
     import FieldFile from './field-file';
     import Model from '../lib/model';
+    import { extend } from "lodash";
 
     let model = Model({
         defaults: {
@@ -129,7 +130,7 @@
         },
         methods: {
             reset(){
-                _.extend(this.$data, start());
+                extend(this.$data, start());
                 this.$refs.new_file.clear();
             },
             add() {
